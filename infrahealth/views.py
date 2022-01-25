@@ -28,7 +28,6 @@ class RegisterAPI(generics.GenericAPIView):
         "token": AuthToken.objects.create(user)[1]
         })
         
-# Login API
 class LoginAPI(KnoxLoginView):
     permission_classes = (permissions.AllowAny,)
 
@@ -67,4 +66,4 @@ def HealthCheck(request, id = 0):
         question.delete()
         return JsonResponse("Question deleted successfully", safe=False)
     
-    
+
