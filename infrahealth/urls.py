@@ -11,5 +11,5 @@ urlpatterns = [
     path('api/logout/', knox_views.LogoutView.as_view(), name='logout'),
     path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
     path('api/healthcheck/', views.HealthCheck),
-    url(r'^api/healthcheck/([0-9]+)$', views.HealthCheck)
+    url(r'^api/healthcheck/([0-9]+)$', views.HealthCheck),
 ]

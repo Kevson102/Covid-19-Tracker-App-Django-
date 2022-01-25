@@ -23,12 +23,7 @@ class HealthCheckQuestions(models.Model):
   def __str__(self):
     return self.question
     
-class answer(models.Model):
-  question = models.ForeignKey(HealthCheckQuestions, on_delete=models.CASCADE)
-  answer = models.CharField(max_length=20)
-  
-  def __str__(self):
-    return self.answer
+
      
 # class HealthCheck(models.Model):
 #    Have_you_lost_smell_or_test = models.BooleanField()
