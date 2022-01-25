@@ -6,4 +6,5 @@ from infrahealth.models import *
 admin.site.register(Location)
 admin.site.register(Patient)
 admin.site.register(HealthCheckQuestions)
+admin.site.register(Answer)
 
