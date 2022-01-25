@@ -37,5 +37,9 @@ class HealthCheckSerializer(serializers.ModelSerializer):
         model = HealthCheckQuestions
         fields = '__all__'
 
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = '__all__'
 
 

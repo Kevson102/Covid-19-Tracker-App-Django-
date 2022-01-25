@@ -22,7 +22,13 @@ class HealthCheckQuestions(models.Model):
   
   def __str__(self):
     return self.question
-    
+
+class Answer(models.Model):
+  question = models.ForeignKey(HealthCheckQuestions, on_delete=models.CASCADE)
+  answer = models.CharField(max_length=20)
+  
+  def __str__(self):
+    return self.answer
 
      
 # class HealthCheck(models.Model):
