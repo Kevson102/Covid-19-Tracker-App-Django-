@@ -6,8 +6,10 @@ from rest_framework.response import Response
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.models import AuthToken
 from knox.views import LoginView as KnoxLoginView
-from .serializers import UserSerializer, RegisterSerializer
-
+from .serializers import HealthCheckSerializer, UserSerializer, RegisterSerializer
+from rest_framework.parsers import JSONParser
+from django.http.response import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 # Register API
@@ -34,3 +36,15 @@ class LoginAPI(KnoxLoginView):
         user = serializer.validated_data['user']
         login(request, user)
         return super(LoginAPI, self).post(request, format=None)
+    
+# Healthchecklist questions API
+@csrf_exempt
+def HealthCheckQuestions(request, id = 0):
+    if request.method == 'POST':
+        question_data = JSONParser().parse(request)
+        question_serializer = HealthCheckSerializer(data = question_data)
+        if question_serializer.is_valid():
+            question_serializer.save()
+            print("working")
+            return JsonResponse("The question was added successfully", safe=False)
+        return JsonResponse("There was a problem adding the question", safe=False)

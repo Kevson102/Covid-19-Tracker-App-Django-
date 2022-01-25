@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
-from infrahealth.models import HealthCheck, Location, Patient
+from infrahealth.models import HealthCheckQuestions, Location, Patient, answer
 
 # User Serializer
 class UserSerializer(serializers.ModelSerializer):
@@ -34,5 +34,11 @@ class PatientSerializer(serializers.ModelSerializer):
         
 class HealthCheckSerializer(serializers.ModelSerializer):
     class Meta:
-        model = HealthCheck
+        model = HealthCheckQuestions
+        fields = '__all__'
+
+
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = answer
         fields = '__all__'
