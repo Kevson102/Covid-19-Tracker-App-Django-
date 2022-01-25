@@ -65,5 +65,31 @@ def HealthCheck(request, id = 0):
         question = HealthCheckQuestions.objects.get(id=id)
         question.delete()
         return JsonResponse("Question deleted successfully", safe=False)
-    
+
+@csrf_exempt
+def Answers(request, id = 0):
+    if request.method == 'POST':
+        response_data = JSONParser().parse(request)
+        response_serializer = AnswerSerializer(data = response_data)
+        if response_serializer.is_valid():
+            response_serializer.save()
+            print("working")
+            return JsonResponse("The response was added successfully", safe=False)
+        return JsonResponse("There was a problem adding the response", safe=False)
+    elif request.method == 'GET':
+        responses = Answer.objects.all()
+        response_serializer = AnswerSerializer(responses, many = True)
+        return JsonResponse(response_serializer.data, safe = False)
+    elif request.method == 'PUT':
+        response_data = JSONParser().parse(request)
+        response = Answer.objects.get (id = response_data['id'])
+        response_serializer = AnswerSerializer(response, data = response_data)
+        if response_serializer.is_valid():
+            response_serializer.save()
+            return JsonResponse("The response was updated successfully", safe = False)
+        return JsonResponse("response update was not successful", safe=False)
+    elif request.method == 'DELETE':
+        response = Answer.objects.get(id=id)
+        response.delete()
+        return JsonResponse("response deleted successfully", safe=False)
 

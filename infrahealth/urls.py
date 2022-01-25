@@ -12,4 +12,6 @@ urlpatterns = [
     path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
     path('api/healthcheck/', views.HealthCheck),
     url(r'^api/healthcheck/([0-9]+)$', views.HealthCheck),
+    path('api/response/', views.Answers),
+    url(r'^api/response/([0-9]+)$', views.Answers), 
 ]
