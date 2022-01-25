@@ -10,6 +10,8 @@ from .serializers import HealthCheckSerializer, UserSerializer, RegisterSerializ
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+
+from .models import *
 # Create your views here.
 
 # Register API
@@ -39,7 +41,7 @@ class LoginAPI(KnoxLoginView):
     
 # Healthchecklist questions API
 @csrf_exempt
-def HealthCheckQuestions(request, id = 0):
+def HealthCheck(request, id = 0):
     if request.method == 'POST':
         question_data = JSONParser().parse(request)
         question_serializer = HealthCheckSerializer(data = question_data)
@@ -48,3 +50,21 @@ def HealthCheckQuestions(request, id = 0):
             print("working")
             return JsonResponse("The question was added successfully", safe=False)
         return JsonResponse("There was a problem adding the question", safe=False)
+    elif request.method == 'GET':
+        questions = HealthCheckQuestions.objects.all()
+        questions_serializer = HealthCheckSerializer(questions, many = True)
+        return JsonResponse(questions_serializer.data, safe = False)
+    elif request.method == 'PUT':
+        question_data = JSONParser().parse(request)
+        question = HealthCheckQuestions.objects.get (id = question_data['id'])
+        question_serializer = HealthCheckSerializer(question, data = question_data)
+        if question_serializer.is_valid():
+            question_serializer.save()
+            return JsonResponse("The question was updated successfully", safe = False)
+        return JsonResponse("Question update was not successful", safe=False)
+    elif request.method == 'DELETE':
+        question = HealthCheckQuestions.objects.get(id=id)
+        question.delete()
+        return JsonResponse("Question deleted successfully", safe=False)
+    
+    
