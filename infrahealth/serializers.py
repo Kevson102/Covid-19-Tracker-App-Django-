@@ -40,6 +40,6 @@ class HealthCheckSerializer(serializers.ModelSerializer):
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = '_all_'
+        fields = '__all__'
 
 
