@@ -4,17 +4,20 @@ from django.contrib.auth.models import User
 from infrahealth.models import *
 
 # User Serializer
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username','first_name', 'last_name', 'email')
+        fields = ('id', 'username', 'first_name', 'last_name', 'email')
 
 
 # Register Serializer
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username','first_name', 'last_name', 'email', 'password')
+        fields = ('id', 'username', 'first_name',
+                  'last_name', 'email', 'password')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -22,20 +25,25 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 # Location serializer
+
+
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields = '__all__'
 
+
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         fields = '__all__'
-        
+
+
 class HealthCheckSerializer(serializers.ModelSerializer):
     class Meta:
         model = HealthCheckQuestions
         fields = '__all__'
+
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,3 +51,19 @@ class AnswerSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class DoctorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Doctor
+        fields = '__all__'
+
+
+class HospitalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Hospital
+        fields = '__all__'
+
+
+class MedicalTestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MedicalTest
+        fields = '__all__'
