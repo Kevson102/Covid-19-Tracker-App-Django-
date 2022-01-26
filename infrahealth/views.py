@@ -15,6 +15,8 @@ from .models import *
 # Create your views here.
 
 # Register API
+
+
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
@@ -24,10 +26,11 @@ class RegisterAPI(generics.GenericAPIView):
         user = serializer.save()
         messages.success(request, f'User was registered successfully')
         return Response({
-        "user": UserSerializer(user, context=self.get_serializer_context()).data,
-        "token": AuthToken.objects.create(user)[1]
+            "user": UserSerializer(user, context=self.get_serializer_context()).data,
+            "token": AuthToken.objects.create(user)[1]
         })
-        
+
+
 class LoginAPI(KnoxLoginView):
     permission_classes = (permissions.AllowAny,)
 
@@ -37,13 +40,15 @@ class LoginAPI(KnoxLoginView):
         user = serializer.validated_data['user']
         login(request, user)
         return super(LoginAPI, self).post(request, format=None)
-    
+
 # Healthchecklist questions API
+
+
 @csrf_exempt
-def HealthCheck(request, id = 0):
+def HealthCheck(request, id=0):
     if request.method == 'POST':
         question_data = JSONParser().parse(request)
-        question_serializer = HealthCheckSerializer(data = question_data)
+        question_serializer = HealthCheckSerializer(data=question_data)
         if question_serializer.is_valid():
             question_serializer.save()
             print("working")
@@ -51,26 +56,28 @@ def HealthCheck(request, id = 0):
         return JsonResponse("There was a problem adding the question", safe=False)
     elif request.method == 'GET':
         questions = HealthCheckQuestions.objects.all()
-        questions_serializer = HealthCheckSerializer(questions, many = True)
-        return JsonResponse(questions_serializer.data, safe = False)
+        questions_serializer = HealthCheckSerializer(questions, many=True)
+        return JsonResponse(questions_serializer.data, safe=False)
     elif request.method == 'PUT':
         question_data = JSONParser().parse(request)
-        question = HealthCheckQuestions.objects.get (id = question_data['id'])
-        question_serializer = HealthCheckSerializer(question, data = question_data)
+        question = HealthCheckQuestions.objects.get(id=question_data['id'])
+        question_serializer = HealthCheckSerializer(
+            question, data=question_data)
         if question_serializer.is_valid():
             question_serializer.save()
-            return JsonResponse("The question was updated successfully", safe = False)
+            return JsonResponse("The question was updated successfully", safe=False)
         return JsonResponse("Question update was not successful", safe=False)
     elif request.method == 'DELETE':
         question = HealthCheckQuestions.objects.get(id=id)
         question.delete()
         return JsonResponse("Question deleted successfully", safe=False)
 
+
 @csrf_exempt
-def Answers(request, id = 0):
+def Answers(request, id=0):
     if request.method == 'POST':
         response_data = JSONParser().parse(request)
-        response_serializer = AnswerSerializer(data = response_data)
+        response_serializer = AnswerSerializer(data=response_data)
         if response_serializer.is_valid():
             response_serializer.save()
             print("working")
@@ -78,18 +85,45 @@ def Answers(request, id = 0):
         return JsonResponse("There was a problem adding the response", safe=False)
     elif request.method == 'GET':
         responses = Answer.objects.all()
-        response_serializer = AnswerSerializer(responses, many = True)
-        return JsonResponse(response_serializer.data, safe = False)
+        response_serializer = AnswerSerializer(responses, many=True)
+        return JsonResponse(response_serializer.data, safe=False)
     elif request.method == 'PUT':
         response_data = JSONParser().parse(request)
-        response = Answer.objects.get (id = response_data['id'])
-        response_serializer = AnswerSerializer(response, data = response_data)
+        response = Answer.objects.get(id=response_data['id'])
+        response_serializer = AnswerSerializer(response, data=response_data)
         if response_serializer.is_valid():
             response_serializer.save()
-            return JsonResponse("The response was updated successfully", safe = False)
+            return JsonResponse("The response was updated successfully", safe=False)
         return JsonResponse("response update was not successful", safe=False)
     elif request.method == 'DELETE':
         response = Answer.objects.get(id=id)
         response.delete()
         return JsonResponse("response deleted successfully", safe=False)
 
+
+@csrf_exempt
+def MedicalTestView(request, id=0):
+    if request.method == 'POST':
+        response_data = JSONParser().parse(request)
+        response_serializer = MedicalTestSerializer(data=response_data)
+        if response_serializer.is_valid():
+            response_serializer.save()
+            return JsonResponse('Medical Test Results were saved successfully', safe=False)
+        return JsonResponse('Save Failed', safe=False)
+    elif request.method == 'GET':
+        response = MedicalTest.objects.all()
+        response_serializer = MedicalTestSerializer(response, many=True)
+        return JsonResponse(response_serializer.data, safe=False)
+    elif request.method == 'PUT':
+        response_data = JSONParser().parse(request)
+        response = MedicalTest.objects.get(id=response_data['id'])
+        response_serializer = MedicalTestSerializer(
+            response, data=response_data)
+        if response_serializer.is_valid():
+            response_serializer.save()
+            return JsonResponse('Record Updated Successfully', safe=False)
+        return JsonResponse('Update Failed', safe=False)
+    elif request.method == 'DELETE':
+        response = MedicalTest.objects.get(id=id)
+        response.delete()
+        return JsonResponse('Deleted Successfully', safe=False)
