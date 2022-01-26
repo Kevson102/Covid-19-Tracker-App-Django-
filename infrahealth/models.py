@@ -25,10 +25,10 @@ class HealthCheckQuestions(models.Model):
 
 class Answer(models.Model):
   question = models.ForeignKey(HealthCheckQuestions, on_delete=models.CASCADE)
-  answer = models.CharField(max_length=20)
+  answer = models.BooleanField()
   
   def __str__(self):
-    return self.answer
+    return str(self.answer)
 
      
 # class HealthCheck(models.Model):
