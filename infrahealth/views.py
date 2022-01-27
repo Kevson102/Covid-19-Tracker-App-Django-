@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth import login
 from django.contrib import messages
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions,status
 from rest_framework.response import Response
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.models import AuthToken
@@ -10,6 +10,8 @@ from .serializers import *
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+
 
 from .models import *
 # Create your views here.
@@ -39,6 +41,7 @@ class LoginAPI(KnoxLoginView):
         return super(LoginAPI, self).post(request, format=None)
     
 # Healthchecklist questions API
+@api_view(['GET','POST','PUT','DELETE'])
 @csrf_exempt
 def HealthCheck(request, id = 0):
     if request.method == 'POST':
@@ -52,7 +55,7 @@ def HealthCheck(request, id = 0):
     elif request.method == 'GET':
         questions = HealthCheckQuestions.objects.all()
         questions_serializer = HealthCheckSerializer(questions, many = True)
-        return JsonResponse(questions_serializer.data, safe = False)
+        return Response(questions_serializer.data, status.HTTP_200_OK)
     elif request.method == 'PUT':
         question_data = JSONParser().parse(request)
         question = HealthCheckQuestions.objects.get (id = question_data['id'])
