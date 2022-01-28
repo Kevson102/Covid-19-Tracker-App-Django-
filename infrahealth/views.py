@@ -54,10 +54,12 @@ def HealthCheck(request, id=0):
             print("working")
             return JsonResponse("The question was added successfully", safe=False)
         return JsonResponse("There was a problem adding the question", safe=False)
+    
     elif request.method == 'GET':
         questions = HealthCheckQuestions.objects.all()
         questions_serializer = HealthCheckSerializer(questions, many=True)
         return JsonResponse(questions_serializer.data, safe=False)
+    
     elif request.method == 'PUT':
         question_data = JSONParser().parse(request)
         question = HealthCheckQuestions.objects.get(id=question_data['id'])
@@ -67,6 +69,7 @@ def HealthCheck(request, id=0):
             question_serializer.save()
             return JsonResponse("The question was updated successfully", safe=False)
         return JsonResponse("Question update was not successful", safe=False)
+    
     elif request.method == 'DELETE':
         question = HealthCheckQuestions.objects.get(id=id)
         question.delete()
