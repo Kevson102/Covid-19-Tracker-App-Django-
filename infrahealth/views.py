@@ -47,7 +47,7 @@ class LoginAPI(KnoxLoginView):
 # Healthchecklist questions API
 @api_view(['GET','POST','PUT','DELETE'])
 @csrf_exempt
-@login_required
+@login_required(login_url='/api/login/')
 def HealthCheck(request, id=0):
     if request.method == 'POST':
         question_data = JSONParser().parse(request)
@@ -81,7 +81,7 @@ def HealthCheck(request, id=0):
 
 @api_view(['GET','POST','PUT','DELETE'])
 @csrf_exempt
-@login_required
+@login_required(login_url='/api/login/')
 def Answers(request, id=0):
     if request.method == 'POST':
         response_data = JSONParser().parse(request)
@@ -111,7 +111,7 @@ def Answers(request, id=0):
 
 @api_view(['GET','POST','PUT','DELETE'])
 @csrf_exempt
-@login_required
+@login_required(login_url='/api/login/')
 def MedicalTestView(request, id=0):
     if request.method == 'POST':
         response_data = JSONParser().parse(request)

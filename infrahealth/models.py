@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 # Create your models here.
 
@@ -67,23 +67,3 @@ class MedicalTest(models.Model):
     def __str__(self):
         return str(self.nasal_swab_test)
 
-
-# class HealthCheck(models.Model):
-#    Have_you_lost_smell_or_test = models.BooleanField()
-#    Do_you_have_a_sore_throat = models.BooleanField()
-#    Are_you_experiencing_fatigue= models.BooleanField()
-#    Do_you_have_a_cough= models.BooleanField()
-#    Do_you_have_difficulties_in_breathing= models.BooleanField()
-#    Do_you_have_a_fever= models.BooleanField()
-#    Do_you_have_chills= models.BooleanField()
-#    Do_you_have_a_headache= models.BooleanField()
-#    Do_you_have_muscle_aches= models.BooleanField()
-#    Do_you_have_nasal_congestion= models.BooleanField()
-#    Are_you_experiencing_nausea= models.BooleanField()
-#    Are_you_experiencing_any_vomiting= models.BooleanField()
-#    Do_you_have_diarrhea= models.BooleanField()
-#    Close_contact_with_an_infected_person= models.BooleanField()
-#    Patient=models.ForeignKey(Patient, on_delete= models.CASCADE)
-
-#    def __str__(self):
-#        return self.Patient
