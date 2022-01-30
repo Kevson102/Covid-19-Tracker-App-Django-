@@ -1,22 +1,23 @@
-from django.shortcuts import render
-from django.contrib.auth import login
 from django.contrib import messages
-from rest_framework import generics, permissions
-from rest_framework.response import Response
-from rest_framework.authtoken.serializers import AuthTokenSerializer
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.http.response import JsonResponse
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from knox.models import AuthToken
 from knox.views import LoginView as KnoxLoginView
-from .serializers import *
+from rest_framework import generics, permissions
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
-from django.http.response import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.response import Response
 
 from .models import *
+from .serializers import *
+
 # Create your views here.
 
 # Register API
-
-
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
@@ -31,6 +32,7 @@ class RegisterAPI(generics.GenericAPIView):
         })
 
 
+# Login API
 class LoginAPI(KnoxLoginView):
     permission_classes = (permissions.AllowAny,)
 
@@ -41,10 +43,11 @@ class LoginAPI(KnoxLoginView):
         login(request, user)
         return super(LoginAPI, self).post(request, format=None)
 
+
 # Healthchecklist questions API
-
-
+@api_view(['GET','POST','PUT','DELETE'])
 @csrf_exempt
+@login_required(login_url='/api/login/')
 def HealthCheck(request, id=0):
     if request.method == 'POST':
         question_data = JSONParser().parse(request)
@@ -54,10 +57,12 @@ def HealthCheck(request, id=0):
             print("working")
             return JsonResponse("The question was added successfully", safe=False)
         return JsonResponse("There was a problem adding the question", safe=False)
+    
     elif request.method == 'GET':
         questions = HealthCheckQuestions.objects.all()
         questions_serializer = HealthCheckSerializer(questions, many=True)
         return JsonResponse(questions_serializer.data, safe=False)
+    
     elif request.method == 'PUT':
         question_data = JSONParser().parse(request)
         question = HealthCheckQuestions.objects.get(id=question_data['id'])
@@ -67,13 +72,16 @@ def HealthCheck(request, id=0):
             question_serializer.save()
             return JsonResponse("The question was updated successfully", safe=False)
         return JsonResponse("Question update was not successful", safe=False)
+    
     elif request.method == 'DELETE':
         question = HealthCheckQuestions.objects.get(id=id)
         question.delete()
         return JsonResponse("Question deleted successfully", safe=False)
 
 
+@api_view(['GET','POST','PUT','DELETE'])
 @csrf_exempt
+@login_required(login_url='/api/login/')
 def Answers(request, id=0):
     if request.method == 'POST':
         response_data = JSONParser().parse(request)
@@ -101,7 +109,9 @@ def Answers(request, id=0):
         return JsonResponse("response deleted successfully", safe=False)
 
 
+@api_view(['GET','POST','PUT','DELETE'])
 @csrf_exempt
+@login_required(login_url='/api/login/')
 def MedicalTestView(request, id=0):
     if request.method == 'POST':
         response_data = JSONParser().parse(request)
