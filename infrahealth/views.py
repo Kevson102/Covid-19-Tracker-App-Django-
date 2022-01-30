@@ -17,6 +17,9 @@ from .serializers import *
 
 # Create your views here.
 
+def home(request):
+  return render(request, 'index.html')
+
 # Register API
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
