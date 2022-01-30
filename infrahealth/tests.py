@@ -1,20 +1,3 @@
-# from django.test import TestCase, client
-# from rest_framework.test import APITestCase, APIClient
-# from rest_framework.reverse import reverse
-
-# # Create your tests here.
-# class BaseTest(APITestCase):
-#   '''
-#   Base test case for all test cases
-#   '''
-#   client=APIClient()
-  
-#   def setUp(self):
-#     '''
-#     test method for all settings
-#     '''
-#     self.login_url = reverse("authentication:login")
-
 import json
 import requests
 
@@ -58,17 +41,9 @@ class HealthCheckTestCase(APITestCase):
     
   # Test get request
   def test_healthcheck_get(self):
-    
-    #post a question 
-    # question = {"question": "Do you have nasal congestion"}
-    # question_data = json.dumps(question)
-    # response = requests.post("http://127.0.0.1:8000/api/healthcheck/", question_data)
-    # print (response)
-    
     # get the saved question
     found_question = self.client.get("http://127.0.0.1:8000/api/healthcheck/")
     self.assertEqual(found_question.status_code, status.HTTP_200_OK)
-    
-  # Test delete method
+
   
     

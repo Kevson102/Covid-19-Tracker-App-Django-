@@ -1,22 +1,23 @@
-from django.shortcuts import render
-from django.contrib.auth import login
 from django.contrib import messages
-from rest_framework import generics, permissions
-from rest_framework.response import Response
-from rest_framework.authtoken.serializers import AuthTokenSerializer
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.http.response import JsonResponse
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from knox.models import AuthToken
 from knox.views import LoginView as KnoxLoginView
-from .serializers import *
+from rest_framework import generics, permissions
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
-from django.http.response import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.response import Response
 
 from .models import *
+from .serializers import *
+
 # Create your views here.
 
 # Register API
-
-
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
@@ -31,6 +32,7 @@ class RegisterAPI(generics.GenericAPIView):
         })
 
 
+# Login API
 class LoginAPI(KnoxLoginView):
     permission_classes = (permissions.AllowAny,)
 
@@ -41,10 +43,11 @@ class LoginAPI(KnoxLoginView):
         login(request, user)
         return super(LoginAPI, self).post(request, format=None)
 
+
 # Healthchecklist questions API
-
-
+@api_view(['GET','POST','PUT','DELETE'])
 @csrf_exempt
+@login_required
 def HealthCheck(request, id=0):
     if request.method == 'POST':
         question_data = JSONParser().parse(request)
@@ -76,7 +79,9 @@ def HealthCheck(request, id=0):
         return JsonResponse("Question deleted successfully", safe=False)
 
 
+@api_view(['GET','POST','PUT','DELETE'])
 @csrf_exempt
+@login_required
 def Answers(request, id=0):
     if request.method == 'POST':
         response_data = JSONParser().parse(request)
@@ -104,7 +109,9 @@ def Answers(request, id=0):
         return JsonResponse("response deleted successfully", safe=False)
 
 
+@api_view(['GET','POST','PUT','DELETE'])
 @csrf_exempt
+@login_required
 def MedicalTestView(request, id=0):
     if request.method == 'POST':
         response_data = JSONParser().parse(request)
