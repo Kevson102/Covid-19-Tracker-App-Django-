@@ -28,7 +28,7 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 if config('MODE')=="dev":
    DATABASES = {
        'default': {
-           'ENGINE': 'django.db.backends.postgresql',
+           'ENGINE': 'django.db.backends.postgresql_psycopg2',
            'NAME': config('DB_NAME'),
            'USER': config('DB_USER'),
            'PASSWORD': config('DB_PASSWORD'),
@@ -190,6 +190,9 @@ REST_FRAMEWORK = {
 }
 
 
+
+# Simplified static file serving.
+# https://warehouse.python.org/project/whitenoise/
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
