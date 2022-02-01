@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -11,6 +12,7 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
+# from django.contrib.auth.models import User
 
 from .models import *
 from .serializers import *
@@ -38,13 +40,22 @@ class RegisterAPI(generics.GenericAPIView):
 # Login API
 class LoginAPI(KnoxLoginView):
     permission_classes = (permissions.AllowAny,)
-
+    
+    
     def post(self, request, format=None):
+        
         serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         login(request, user)
+        get_user(request)
         return super(LoginAPI, self).post(request, format=None)
+    
+def get_user(request):
+    current_user = request.user
+    if request.user.is_authenticated:
+        return Response({current_user.id, current_user.username, current_user.email})
+
 
 
 # Healthchecklist questions API
