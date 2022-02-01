@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -11,6 +12,7 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
+# from django.contrib.auth.models import User
 
 from .models import *
 from .serializers import *
@@ -38,13 +40,22 @@ class RegisterAPI(generics.GenericAPIView):
 # Login API
 class LoginAPI(KnoxLoginView):
     permission_classes = (permissions.AllowAny,)
-
+    
+    
     def post(self, request, format=None):
+        
         serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         login(request, user)
+        get_user(request)
         return super(LoginAPI, self).post(request, format=None)
+    
+def get_user(request):
+    current_user = request.user
+    if request.user.is_authenticated:
+        return Response({current_user.id, current_user.username, current_user.email})
+
 
 
 # Healthchecklist questions API
@@ -86,7 +97,9 @@ def HealthCheck(request, id=0):
 @csrf_exempt
 @login_required(login_url='/api/login/')
 def Answers(request, id=0):
+        
     if request.method == 'POST':
+        patient = Patient.objects.get(user = request.user)
         response_data = JSONParser().parse(request)
         response_serializer = AnswerSerializer(data=response_data)
         if response_serializer.is_valid():
@@ -95,7 +108,8 @@ def Answers(request, id=0):
             return JsonResponse("The response was added successfully", safe=False)
         return JsonResponse("There was a problem adding the response", safe=False)
     elif request.method == 'GET':
-        responses = Answer.objects.all()
+        patient = Patient.objects.get(user = request.user)
+        responses = Answer.objects.filter(patient_id = patient.id)
         response_serializer = AnswerSerializer(responses, many=True)
         return JsonResponse(response_serializer.data, safe=False)
     elif request.method == 'PUT':
