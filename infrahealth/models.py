@@ -11,10 +11,28 @@ class Location(models.Model):
     def __str__(self):
         return self.location_name
 
+class HealthCheckQuestions(models.Model):
+    question = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.question
+
+
+class Answer(models.Model):
+    answer = models.BooleanField()
+    date_responded = models.DateTimeField(auto_now=True)
+    question = models.ForeignKey(HealthCheckQuestions, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null = True)
+    # patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.answer)
+
 
 class Patient(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     Location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE, null = True)
 
     def __str__(self):
         return self.user.username
@@ -35,23 +53,6 @@ class Doctor(models.Model):
 
     def __str__(self):
         return self.user.username
-
-
-class HealthCheckQuestions(models.Model):
-    question = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.question
-
-
-class Answer(models.Model):
-    answer = models.BooleanField()
-    date_responded = models.DateTimeField(auto_now=True)
-    question = models.ForeignKey(HealthCheckQuestions, on_delete=models.CASCADE)
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return str(self.answer)
 
 
 class MedicalTest(models.Model):
