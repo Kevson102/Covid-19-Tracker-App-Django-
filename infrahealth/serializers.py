@@ -46,10 +46,13 @@ class HealthCheckSerializer(serializers.ModelSerializer):
 
 
 class AnswerSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
     class Meta:
         model = Answer
         fields = '__all__'
-
+    def save(self, request, question):
+        answers_list = Answer(answer=self.validated_data['answer'], user = request.user, question = question)
+        answers_list.save()
 
 class DoctorSerializer(serializers.ModelSerializer):
     class Meta:

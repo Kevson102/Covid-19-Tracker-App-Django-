@@ -108,8 +108,10 @@ def Answers(request, id=0):
             return JsonResponse("The response was added successfully", safe=False)
         return JsonResponse("There was a problem adding the response", safe=False)
     elif request.method == 'GET':
+        user = Answer.objects.get(user=request.user)
+        print(user.answer)
         patient = Patient.objects.get(user = request.user)
-        responses = Answer.objects.filter(patient_id = patient.id)
+        responses = Answer.objects.filter(user = request.user)
         response_serializer = AnswerSerializer(responses, many=True)
         return JsonResponse(response_serializer.data, safe=False)
     elif request.method == 'PUT':
