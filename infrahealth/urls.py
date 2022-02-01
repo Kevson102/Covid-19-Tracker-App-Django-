@@ -6,7 +6,7 @@ from . import views
 from .views import LoginAPI, RegisterAPI
 
 urlpatterns = [
-    url(r'', views.home, name="home"),
+    # url(r'', views.home, name="home"),
     path('api/register/', RegisterAPI.as_view(), name='register'),
     path('api/login/', LoginAPI.as_view(), name='login'),
     path('api/logout/', knox_views.LogoutView.as_view(), name='logout'),
@@ -17,4 +17,6 @@ urlpatterns = [
     url(r'^api/response/([0-9]+)$', views.Answers),
     path('api/medicaltest/', views.MedicalTestView),
     url(r'^api/medicaltest/([0-9]+)$', views.MedicalTestView),
+    path('api/Patients/', views.PatientsView),
+    url(r'^api/Patients/([0-9]+)$', views.PatientsView),
 ]
