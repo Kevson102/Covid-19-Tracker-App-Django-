@@ -17,4 +17,6 @@ urlpatterns = [
     url(r'^api/response/([0-9]+)$', views.Answers),
     path('api/medicaltest/', views.MedicalTestView),
     url(r'^api/medicaltest/([0-9]+)$', views.MedicalTestView),
+    path('api/Patients/', views.PatientsView),
+    url(r'^api/Patients/([0-9]+)$', views.PatientsView),
 ]

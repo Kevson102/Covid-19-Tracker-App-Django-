@@ -140,3 +140,32 @@ def MedicalTestView(request, id=0):
         response = MedicalTest.objects.get(id=id)
         response.delete()
         return JsonResponse('Deleted Successfully', safe=False)
+
+@api_view(['GET','POST','PUT','DELETE'])
+@csrf_exempt
+@login_required(login_url='/api/login/')
+def PatientsView(request, id=0):
+    if request.method == 'POST':
+        response_data = JSONParser().parse(request)
+        response_serializer = PatientSerializer(data=response_data)
+        if response_serializer.is_valid():
+            response_serializer.save()
+            return JsonResponse('Patient was saved successfully', safe=False)
+        return JsonResponse('Save Failed', safe=False)
+    elif request.method == 'GET':
+        response = Patient.objects.all()
+        response_serializer = PatientSerializer(response, many=True)
+        return JsonResponse(response_serializer.data, safe=False)
+    elif request.method == 'PUT':
+        response_data = JSONParser().parse(request)
+        response = Patient.objects.get(id=response_data['id'])
+        response_serializer = PatientSerializer(
+            response, data=response_data)
+        if response_serializer.is_valid():
+            response_serializer.save()
+            return JsonResponse('Patient Record Updated Successfully', safe=False)
+        return JsonResponse('Patient Update Failed', safe=False)
+    elif request.method == 'DELETE':
+        response = Patient.objects.get(id=id)
+        response.delete()
+        return JsonResponse('Patient Deleted Successfully', safe=False)
