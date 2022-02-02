@@ -97,7 +97,9 @@ def HealthCheck(request, id=0):
 @csrf_exempt
 @login_required(login_url='/api/login/')
 def Answers(request, id=0):
+        
     if request.method == 'POST':
+        patient = Patient.objects.get(user = request.user)
         response_data = JSONParser().parse(request)
         response_serializer = AnswerSerializer(data=response_data)
         if response_serializer.is_valid():
@@ -115,6 +117,7 @@ def Answers(request, id=0):
             response_serializer = AnswerSerializer(responses, many=True)
             return JsonResponse(response_serializer.data, safe=False)
         return JsonResponse("That patient do not exist", safe = False)
+
     elif request.method == 'PUT':
         response_data = JSONParser().parse(request)
         response = Answer.objects.get(id=response_data['id'])
