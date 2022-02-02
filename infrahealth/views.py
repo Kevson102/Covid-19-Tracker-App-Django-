@@ -170,7 +170,10 @@ def PatientsView(request, id=0):
             return JsonResponse('Patient was saved successfully', safe=False)
         return JsonResponse('Save Failed', safe=False)
     elif request.method == 'GET':
-        response = Patient.objects.all()
+        current_user = request.user
+        response = Patient.objects.filter(user_id = current_user.id)
+        # print(patient.id)
+        # response = Patient.objects.all()
         response_serializer = PatientSerializer(response, many=True)
         return JsonResponse(response_serializer.data, safe=False)
     elif request.method == 'PUT':
