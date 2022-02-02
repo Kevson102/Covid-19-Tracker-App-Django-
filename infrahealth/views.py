@@ -142,7 +142,7 @@ def MedicalTestView(request, id=0):
             return JsonResponse('Medical Test Results were saved successfully', safe=False)
         return JsonResponse('Save Failed', safe=False)
     elif request.method == 'GET':
-        current_user = request.user
+        current_user = request.user 
         patient = Patient.objects.get(user_id = current_user.id)
         print(patient.id)
         if request.user.is_authenticated:
