@@ -106,9 +106,15 @@ def Answers(request, id=0):
             return JsonResponse("The response was added successfully", safe=False)
         return JsonResponse("There was a problem adding the response", safe=False)
     elif request.method == 'GET':
-        responses = Answer.objects.all()
-        response_serializer = AnswerSerializer(responses, many=True)
-        return JsonResponse(response_serializer.data, safe=False)
+        current_user = request.user
+        patient = Patient.objects.get(user_id = current_user.id)
+        print(patient.id)
+        if request.user.is_authenticated:
+            # print({patient.username, patient.id})
+            responses = Answer.objects.filter(patient_id=patient.id)
+            response_serializer = AnswerSerializer(responses, many=True)
+            return JsonResponse(response_serializer.data, safe=False)
+        return JsonResponse("That patient do not exist", safe = False)
     elif request.method == 'PUT':
         response_data = JSONParser().parse(request)
         response = Answer.objects.get(id=response_data['id'])
