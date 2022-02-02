@@ -142,9 +142,13 @@ def MedicalTestView(request, id=0):
             return JsonResponse('Medical Test Results were saved successfully', safe=False)
         return JsonResponse('Save Failed', safe=False)
     elif request.method == 'GET':
-        response = MedicalTest.objects.all()
-        response_serializer = MedicalTestSerializer(response, many=True)
-        return JsonResponse(response_serializer.data, safe=False)
+        current_user = request.user
+        patient = Patient.objects.get(user_id = current_user.id)
+        print(patient.id)
+        if request.user.is_authenticated:
+            response = MedicalTest.objects.filter(patient_id = patient.id)
+            response_serializer = MedicalTestSerializer(response, many=True)
+            return JsonResponse(response_serializer.data, safe=False)
     elif request.method == 'PUT':
         response_data = JSONParser().parse(request)
         response = MedicalTest.objects.get(id=response_data['id'])
