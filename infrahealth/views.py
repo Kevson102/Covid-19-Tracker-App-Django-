@@ -99,6 +99,7 @@ def HealthCheck(request, id=0):
 def Answers(request, id=0):
     if request.method == 'POST':
         response_data = JSONParser().parse(request)
+        print(response_data)
         response_serializer = AnswerSerializer(data=response_data)
         if response_serializer.is_valid():
             response_serializer.save()
@@ -164,6 +165,8 @@ def MedicalTestView(request, id=0):
 def PatientsView(request, id=0):
     if request.method == 'POST':
         response_data = JSONParser().parse(request)
+        print(request)
+        print('working')
         response_serializer = PatientSerializer(data=response_data)
         if response_serializer.is_valid():
             response_serializer.save()
